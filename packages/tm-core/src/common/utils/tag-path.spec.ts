@@ -69,5 +69,11 @@ describe('slugifyTagForFilePath', () => {
 			expect(slugifyTagForFilePath(null)).toBe('unknown-tag');
 			expect(slugifyTagForFilePath(undefined)).toBe('unknown-tag');
 		});
+
+		it('returns the fallback when every character is invalid (slug collapses to empty)', () => {
+			// Without the fallback this would yield a malformed `..._.json` suffix.
+			expect(slugifyTagForFilePath('../../../')).toBe('unknown-tag');
+			expect(slugifyTagForFilePath('////')).toBe('unknown-tag');
+		});
 	});
 });

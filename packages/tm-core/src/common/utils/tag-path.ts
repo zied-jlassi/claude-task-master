@@ -43,10 +43,15 @@ export function slugifyTagForFilePath(
 		return 'unknown-tag';
 	}
 
-	return tagName
+	const slug = tagName
 		.replace(/[^a-zA-Z0-9_-]/g, '-') // Replace invalid chars with hyphens
 		.replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
 		.replace(/-+/g, '-') // Collapse multiple hyphens
 		.toLowerCase() // Convert to lowercase
 		.substring(0, MAX_TAG_SLUG_LENGTH); // Cap length
+
+	// An all-invalid-char tag (e.g. `../../../`) collapses to an empty string,
+	// which would yield a malformed suffix like `task-complexity-report_.json`.
+	// Fall back to the same sentinel used for empty/non-string input.
+	return slug || 'unknown-tag';
 }
